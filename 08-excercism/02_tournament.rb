@@ -24,7 +24,7 @@ module Tournament
 
     output
   end
-  private
+
   def self.parse(input, tally = [])
     input.split(/;|\n/).each_slice(3) do |match|
       case match[2]
