@@ -17,58 +17,56 @@ module Tournament
   def tally(match_results)
     output = ROW % {team: 'Team', played: 'MP', win: 'W', draw: 'D', loss: 'L', points: 'P'}
 
-    tally = parse(match_results)
-    tally = calcultations(tally)
-    tally = sort(tally)
+    matches = parse(match_results)
+    matches = calcultations(matches)
+    matches = sort(matches)
 
-    tally.each do |match|
-      output << (ROW % match)
-    end
+    output += matches.reduce('') { |output, match| output + (ROW % match) }
 
     output
   end
 
   private
 
-  def parse(match_results, tally = [])
+  def parse(match_results, matches = [])
     split_results(match_results).each do |match|
-      parse_match(match, tally)
+      parse_match(match, matches)
     end
 
-    tally
+    matches
   end
 
   def split_results(match_results)
     match_results.split(/;|\n/).each_slice(3)
   end
 
-  def parse_match(match, tally)
+  def parse_match(match, matches)
     first_team = match[FIRST_TEAM]
     second_team = match[SECOND_TEAM]
 
     case match[MATCH_RESULT]
     when 'win'
-      update_tally(tally, first_team, MATCH_RESULT_VALUES['win'])
-      update_tally(tally, second_team, MATCH_RESULT_VALUES['loss'])
+      update_tally(matches, first_team, MATCH_RESULT_VALUES['win'])
+      update_tally(matches, second_team, MATCH_RESULT_VALUES['loss'])
     when 'draw'
-      update_tally(tally, first_team, MATCH_RESULT_VALUES['draw'])
-      update_tally(tally, second_team, MATCH_RESULT_VALUES['draw'])
+      update_tally(matches, first_team, MATCH_RESULT_VALUES['draw'])
+      update_tally(matches, second_team, MATCH_RESULT_VALUES['draw'])
     when 'loss'
-      update_tally(tally, first_team, MATCH_RESULT_VALUES['loss'])
-      update_tally(tally, second_team, MATCH_RESULT_VALUES['win'])
+      update_tally(matches, first_team, MATCH_RESULT_VALUES['loss'])
+      update_tally(matches, second_team, MATCH_RESULT_VALUES['win'])
     end
   end
 
-  def update_tally(tally, team, match_result)
-    tally << { team: team }.merge(match_result)
+  def update_tally(matches, team, match_result)
+    matches << { team: team }.merge(match_result)
   end
 
-  def sort(tally)
-    tally.sort_by! { |match| [-match[:points], match[:team]] }
+  def sort(matches)
+    matches.sort_by! { |match| [-match[:points], match[:team]] }
   end
 
-  def calcultations(tally)
-    results = tally.group_by { |match| match[:team] }.transform_values do |match|
+  def calcultations(matches)
+    results = matches.group_by { |match| match[:team] }.transform_values do |match|
       match.each_with_object({team: '', played: 0, win: 0, draw: 0, loss: 0,
                               points: 0}) do |match1, sums|
         sums[:team] = match1[:team]
