@@ -8,27 +8,27 @@ class RnaTranscriptionTest < Minitest::Test
   end
 
   def test_rna_complement_of_cytosine_is_guanine
-    skip
+    # skip
     assert_equal 'G', Complement.of_dna('C')
   end
 
   def test_rna_complement_of_guanine_is_cytosine
-    skip
+    # skip
     assert_equal 'C', Complement.of_dna('G')
   end
 
   def test_rna_complement_of_thymine_is_adenine
-    skip
+    # skip
     assert_equal 'A', Complement.of_dna('T')
   end
 
   def test_rna_complement_of_adenine_is_uracil
-    skip
+    # skip
     assert_equal 'U', Complement.of_dna('A')
   end
 
   def test_rna_complement
-    skip
+    # skip
     assert_equal 'UGCACCAGAAUU', Complement.of_dna('ACGTGGTCTTAA')
   end
 end
