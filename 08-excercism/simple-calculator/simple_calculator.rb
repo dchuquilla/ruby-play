@@ -5,7 +5,7 @@ class SimpleCalculator
   ALLOWED_OPERATIONS = ['+', '/', '*'].freeze
   DISPLAY = '%<first_operand>s %<operation>s %<second_operand>s = %<result>s'
 
-  def self.calculate(first_operand, second_operand, operation)
+  def initialize(first_operand, second_operand, operation)
     unless ALLOWED_OPERATIONS.include?(operation)
       raise UnsupportedOperation.new('Unsupported operation')
     end
@@ -15,17 +15,19 @@ class SimpleCalculator
     end
 
     begin
-      result = 0
-      case operation
-      when '+'
-        result = first_operand + second_operand
-      when '-'
-        result = first_operand - second_operand
-      when '*'
-        result = first_operand * second_operand
-      when '/'
-        result = first_operand / second_operand
-      end
+      result = first_operand.send(operation, second_operand)
+
+      # Following lines reflect the expanded (not elegant) way to perform the solution.
+#      result = case operation
+#               when '+'
+#                 result = first_operand + second_operand
+#               when '-'
+#                 result = first_operand - second_operand
+#               when '*'
+#                 result = first_operand * second_operand
+#               when '/'
+#                 result = first_operand / second_operand
+#               end
       DISPLAY % {first_operand: first_operand, second_operand: second_operand, operation: operation,
                  result: result}
     rescue TypeError
@@ -33,6 +35,11 @@ class SimpleCalculator
     end
   end
 
+  def self.calculate(first_operand, second_operand, operation)
+    new(first_operand, second_operand, initialize)
+  end
+
 end
 
 class SimpleCalculator::UnsupportedOperation < StandardError; end
+
