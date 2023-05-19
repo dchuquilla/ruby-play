@@ -2,41 +2,38 @@
 
 class SimpleCalculator
 
-  ALLOWED_OPERATIONS = ['+', '/', '*'].freeze
+  ALLOWED_OPERATIONS = ['+', '/', '*']
   DISPLAY = '%<first_operand>s %<operation>s %<second_operand>s = %<result>s'
 
+  private
+
   def initialize(first_operand, second_operand, operation)
-    unless ALLOWED_OPERATIONS.include?(operation)
-      raise UnsupportedOperation.new('Unsupported operation')
-    end
+    @first_operand = first_operand
+    @second_operand = second_operand
+    @operation = operation
+  end
 
-    if operation == '/' && second_operand == 0
-      return 'Division by zero is not allowed.'
-    end
+  public
 
-    begin
-      result = first_operand.send(operation, second_operand)
+  attr_reader :first_operand
+              :second_operand
+              :operation
 
-      # Following lines reflect the expanded (not elegant) way to perform the solution.
-#      result = case operation
-#               when '+'
-#                 result = first_operand + second_operand
-#               when '-'
-#                 result = first_operand - second_operand
-#               when '*'
-#                 result = first_operand * second_operand
-#               when '/'
-#                 result = first_operand / second_operand
-#               end
-      DISPLAY % {first_operand: first_operand, second_operand: second_operand, operation: operation,
-                 result: result}
-    rescue TypeError
-      raise ArgumentError.new('Operand type not supported')
-    end
+  def to_s
+    raise ArgumentError.new('Operand type not supported') if !@first_operand.is_a?(Numeric) || !@second_operand.is_a?(Numeric)
+
+    raise UnsupportedOperation.new('Unsupported operation') unless ALLOWED_OPERATIONS.include?(@operation)
+
+    return 'Division by zero is not allowed.' if @second_operand.zero?
+
+    result = @first_operand.send(@operation, @second_operand)
+
+    DISPLAY % {first_operand: @first_operand, second_operand: @second_operand, operation: @operation,
+               result: result}
   end
 
   def self.calculate(first_operand, second_operand, operation)
-    new(first_operand, second_operand, initialize)
+    new(first_operand, second_operand, operation).to_s
   end
 
 end
