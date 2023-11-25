@@ -1,13 +1,12 @@
 class Acronym
   private
 
-  HYPENS = /-/
-  NOT_CHARS = /[^a-zA-Z]/
+  NOT_CHARS = /\b[a-zA-Z]/
 
   attr_reader :jargon
 
-  def initialize(prhase)
-    @jargon = prhase.gsub(HYPENS, ' ').split.map { |word| word[0].gsub(NOT_CHARS, '').upcase }.join
+  def initialize(phrase)
+    @jargon = phrase.scan(NOT_CHARS).join.upcase
   end
 
   public
@@ -16,7 +15,7 @@ class Acronym
     @jargon
   end
 
-  def self.abbreviate(prhase)
-    new(prhase).to_s
+  def self.abbreviate(phrase)
+    new(phrase).to_s
   end
 end
