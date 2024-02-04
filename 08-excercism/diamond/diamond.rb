@@ -37,14 +37,14 @@ class Diamond
   # conver current row numbers to letter and fill in the line with spaces
   # e.g. row 1 to A, row 2 to B, row 3 to C
   def generate_line(row)
-    @sequence.each_with_object('') { |j, str| str << (j == row ? letter(j) : ' ') }.eol!
+    @sequence.each_with_object('') { |j, str| str << (j == row ? index_letter(j) : ' ') }.eol!
   end
 
   def index_number(letter)
     letter.upcase.ord - ASCII_A
   end
 
-  def letter(number)
+  def index_letter(number)
     (number + ASCII_A).chr
   end
 
