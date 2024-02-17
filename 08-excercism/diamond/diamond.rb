@@ -13,7 +13,7 @@ class Diamond
     new(letter).to_s
   end
 
-  attr_reader :to_s, :sequence, :index
+  attr_reader :to_s, :depth
 
   private
 
@@ -23,24 +23,24 @@ class Diamond
   def initialize(letter)
     @to_s = ""
     diamond_row = 1
-    @index = index_number(letter)
-    @sequence = generate_sequence
+    @depth = depth_number(letter)
 
-    sequence.size.times do |i|
-      @to_s += generate_line(diamond_row)
-      # diamond_row will tell which number convert to letter
-      i >= (@index - 1) ? diamond_row -= 1 : diamond_row += 1
+    @to_s = lines.each_with_object('') do |vertical_point, line|
+      line << generate_line(vertical_point)
     end
   end
 
-  # use sequence to generate each line
+  # use lines and columns sequences to generate each line
   # conver current row numbers to letter and fill in the line with spaces
   # e.g. row 1 to A, row 2 to B, row 3 to C
-  def generate_line(row)
-    @sequence.each_with_object('') { |j, str| str << (j == row ? index_letter(j) : ' ') }.eol!
+  def generate_line(vertical_point)
+    columns.each_with_object('') do |horizontal_point, line|
+      line << ' ' and next unless horizontal_point == vertical_point
+      line << index_letter(horizontal_point)
+    end.eol!
   end
 
-  def index_number(letter)
+  def depth_number(letter)
     letter.upcase.ord - ASCII_A
   end
 
@@ -50,7 +50,13 @@ class Diamond
 
   # generate sequence of count down and count up
   # e.g. 3 => [3, 2, 1, 2, 3]
-  def generate_sequence
-    @index.downto(1).to_a + 2.upto(@index).to_a
+  def columns
+    @_columns ||= (@depth.downto(1) + 2.upto(@depth)).to_enum
+  end
+
+  # generate sequence of count up and count down
+  # e.g. 3 => [1, 2, 3, 2, 1]
+  def lines
+    @_lines ||= (1.upto(@depth) + (@depth - 1).downto(1)).to_enum
   end
 end
