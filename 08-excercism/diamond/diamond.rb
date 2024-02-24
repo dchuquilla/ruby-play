@@ -16,15 +16,12 @@ class Diamond
   attr_reader :to_s
 
   private
-  attr_reader :letter, :depth, :columns, :lines
 
   ASCII_A = 64
   private_constant :ASCII_A
 
   def initialize(letter)
-    @to_s = ""
     @letter = letter
-    diamond_row = 1
 
     @to_s = lines.with_object('') do |vertical_point, line|
       line << generate_line(vertical_point)
