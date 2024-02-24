@@ -38,23 +38,23 @@ class Diamond
     end.eol!
   end
 
-  def depth_number
-    @depth ||= @letter.upcase.ord - ASCII_A
-  end
-
   def index_letter(number)
     (number + ASCII_A).chr
+  end
+
+  def depth
+    @depth ||= @letter.upcase.ord - ASCII_A
   end
 
   # generate sequence of count down and count up
   # e.g. 3 => [3, 2, 1, 2, 3]
   def columns
-    @columns ||= (depth_number.downto(1) + 2.upto(depth_number)).to_enum
+    @columns ||= (depth.downto(1) + 2.upto(depth)).to_enum
   end
 
   # generate sequence of count up and count down
   # e.g. 3 => [1, 2, 3, 2, 1]
   def lines
-    @lines ||= (1.upto(depth_number) + (depth_number - 1).downto(1)).to_enum
+    @lines ||= (1.upto(depth) + (depth - 1).downto(1)).to_enum
   end
 end
