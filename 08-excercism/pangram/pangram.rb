@@ -8,6 +8,7 @@ To get started with TDD, see the `README.md` file in your
 
 class Pangram
   def self.pangram?(sentence)
+    # My solution (0.59)
     alphabet = ('a'..'z').to_a
     sentence.downcase.chars.each do |char|
       alphabet.delete(char) if alphabet.include?(char)
@@ -15,5 +16,12 @@ class Pangram
     end
 
     alphabet.empty?
+
+    # Connor's solution (0.58)
+    # ('a'..'z').all? { |e| sentence.downcase.include?(e) }
+
+    # dmunoz-10's solution (0.57)
+    # sentence.downcase.scan(/[a-z]/).uniq.size == 26
   end
+
 end
