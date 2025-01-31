@@ -119,20 +119,21 @@ words6 = ["a", "b", "c", "d"]
 
 
 def wrapLines(words, limit)
-  puts "Limit required" unless limit
+  return [] if limit.nil? || limit <= 0
+
   result = []
   line = []
 
   words.each do |word|
-    if line.empty? || [line, word].flatten.join('-').size <= limit
+    if line.empty? || (line.join('-').size + word.size + 1) <= limit
       line << word
     else
       result << line.join('-')
       line = [word]
     end
   end
-  result << line.join('-')
-  return result
+  result << line.join('-') unless line.empty?
+  result
 end
 
 puts (wrapLines(words1, 13) == [ "The-day-began",
